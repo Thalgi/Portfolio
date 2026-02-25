@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Thomas Muller - Portfolio</title>
+    
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Three.js and dependencies -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    
+    <!-- Local CSS -->
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="mouse-effect">
+    <div class="circle">
+    </div>
+    <div class="circle-follow">
+    </div>
+  </div>
+  <header class="hide-text">
+    <div class="header-inner">
+      <a href="#" class="navbar-brand" data-section="0">
+        Thomas Muller
+      </a>
+      <nav>
+        <ul>
+          <li><a href="#" data-section="1">Who Am I</a></li>
+          <li><a href="#" data-section="2">What I Do</a></li>
+          <li><a href="#" data-section="3">Previous Projects</a></li>
+          <li><a href="#" data-section="4">Future Projects</a></li>
+          <li><a href="#" data-section="5">Contact Me</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+  <!-- Main container for all sections -->
+  <div class="sections-container">
+    
+    <!-- Section 1: Hero with Marbles -->
+    <section class="section section-1 active">
+      <h1 class="main-txt">Creativity is Formless</h1>
+      <div class="banner hide-text">
+        <div class="banner-inner">
+          <div class="top-desc">
+            <h5>A lot of Marbles</h5>
+            <h6>Play with them if you wish</h6>
+            <span></span>
+          </div>
+          <div class="bottom-desc">
+            <div class="left-desc">
+              <h1>RX-105</h1>
+              <div class="desc-inner">
+                <h5>Simple Study of how JS animation are made</h5>
+                <h6>Using lots of marble in 3d</h6>
+              </div>
+            </div>
+            <div class="middle-desc">
+              <div class="scroll-down-btn">
+                <div class="arrow-circle">
+                  <i class="fa-solid fa-chevron-down"></i>
+                </div>
+              </div>
+            </div>
+            <div class="right-desc">
+              <div class="desc-inner">
+                <span>Social Links</span>
+                <ul>
+                  <li>
+                    <a href="#">
+                      <i class="fa-brands fa-x-twitter"></i>
+                    </a>
+                  </li>
+                  <li>
+                    <a href="#">
+                      <i class="fa-brands fa-facebook-f"></i>
+                    </a>
+                  </li>
+                  <li>
+                    <a href="#">
+                      <i class="fa-brands fa-instagram"></i>
+                    </a>
+                  </li>
+                  <li>
+                    <a href="#">
+                      <i class="fa-brands fa-youtube"></i>
+                    </a>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <span class="rotated-text hide-text">Drag cursor to move them</span>
+      <canvas class="webgl" id="webgl"></canvas>
+    </section>
+
+    <!-- Section 2: About -->
+    <section class="section section-2">
+      <div class="section-inner">
+        <div class="about-layout">
+          <!-- Top row: profile + text -->
+          <div class="about-top">
+            <div class="profile-section">
+              <div class="photo-card">
+                <img src="images/photo1.jpg" alt="Thomas Muller" class="img-fluid">
+              </div>
+            </div>
+            <div class="content-section">
+              <h2>Who Am I</h2>
+              <div class="content-block blue-block">
+                <p>I'm a computer engineer from Bordeaux, which graduated of the Institute of Technology from the same city</p>
+                <p>My hobbies are climbing, swimming, backpacking and .. well easy to guess programming &#10024;</p>
+              </div>
+            </div>
+          </div>
+          <!-- Bottom row: hobby photos -->
+          <div class="about-bottom">
+            <div class="hobby-photo hobby-photo-climb">
+              <div class="photo-card">
+                <img src="images/photo2.jpeg" alt="Climbing" class="img-fluid">
+              </div>
+            </div>
+            <div class="hobby-photo hobby-photo-hike">
+              <div class="photo-card">
+                <img src="images/photo3.jpeg" alt="Backpacking" class="img-fluid">
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="scroll-down-btn">
+          <div class="arrow-circle">
+            <i class="fa-solid fa-chevron-down"></i>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section 3: What I Do -->
+    <section class="section section-3">
+      <div class="section-3-layout">
+        <div class="section-3-content">
+          <h2 class="section-3-title">What I Do</h2>
+          <h3 class="section-3-subtitle">Current Project</h3>
+          <div class="content-block blue-block section-3-block">
+            <p>I have been working on creating Evershapes :</p>
+            <p>A video-games studio project with friends since 2022, with our first goal to produce new Extensions and Addons for the Minecraft Marketplace.</p>
+            <p>We are currently waiting for our partnership review !! To integrate fully the marketplace ecosystem</p>
+          </div>
+          <div class="section-3-cta">
+            <span class="see-more-text">See more here</span>
+            <a href="https://evershapes.net" class="evershapes-logo-link" id="evershapes-link">
+              <div class="evershapes-logo-bubble">
+                <img src="images/evershapes_logo.png" alt="Evershapes Logo">
+              </div>
+            </a>
+          </div>
+        </div>
+        <div class="section-3-image">
+          <div class="portfolio-image-wrapper">
+            <img src="images/portfolio_block.png" alt="Minecraft Portfolio">
+          </div>
+        </div>
+      </div>
+      <div class="scroll-down-btn section-3-arrow">
+        <div class="arrow-circle">
+          <i class="fa-solid fa-chevron-down"></i>
+        </div>
+      </div>
+    </section>
+
+  </div>
+
+  <!-- Local JavaScript -->
+  <script src="script.js"></script>
+</body>
+</html>
