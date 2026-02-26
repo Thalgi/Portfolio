@@ -77,7 +77,11 @@ body {
   justify-content: center;
   align-items: center;
   cursor: pointer;
-  margin: 20px 0;
+  position: absolute;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 5;
 }
 
 .arrow-circle {
@@ -172,8 +176,7 @@ body {
   padding-top: 10px;
 }
 
-.content-section h2,
-.what-i-do h2 {
+.content-section h2 {
   font-size: 34px;
   color: var(--black-color);
   text-transform: uppercase;
@@ -254,16 +257,7 @@ body {
   object-fit: cover;
 }
 
-.section-2 .scroll-down-btn {
-  position: absolute;
-  bottom: 40px;
-  left: 50%;
-  transform: translateX(-50%);
-}
-
 /* Section 3 - What I Do Styles */
-/* CRITICAL: .section-3 must NOT set position or overflow — */
-/* it inherits position:absolute from .section which the slideshow needs */
 .section-3 {
   background: #fbfaff;
 }
@@ -274,7 +268,6 @@ body {
   position: relative;
 }
 
-/* Content centered on the page, on top of everything */
 .section-3-content {
   position: relative;
   z-index: 2;
@@ -347,7 +340,6 @@ body {
   object-fit: contain;
 }
 
-/* Image pinned to right side, behind content — starts off-screen */
 .section-3-image {
   position: absolute;
   top: 0;
@@ -360,7 +352,6 @@ body {
   opacity: 0;
 }
 
-/* When section-3 becomes active, slide the image in */
 .section-3.active .section-3-image {
   transform: translateX(0);
   opacity: 1;
@@ -381,16 +372,14 @@ body {
   object-position: center;
 }
 
-.section-3-arrow {
-  position: absolute;
-  bottom: 40px;
-  left: 50%;
-  transform: translateX(-50%);
-  z-index: 5;
-}
-
 /* Mobile Responsive for Sections 2 & 3 */
 @media (max-width: 768px) {
+  .section-2 .section-inner {
+    justify-content: flex-start;
+    padding-top: 8vh;
+    padding-bottom: 10vh;
+  }
+
   .about-top {
     grid-template-columns: 1fr;
     gap: 30px;
@@ -429,20 +418,13 @@ body {
   }
 
   .about-bottom {
-    flex-direction: column;
-    align-items: center;
-    gap: 30px;
-    padding-left: 0;
+    display: none;
   }
 
   .hobby-photo-climb .photo-card img,
   .hobby-photo-hike .photo-card img {
     width: 240px;
     height: 200px;
-  }
-
-  .section-3-layout {
-    /* image stays behind, content on top */
   }
 
   .section-3-content {
@@ -468,10 +450,6 @@ body {
     opacity: 0.3;
   }
 
-  .portfolio-image-wrapper {
-    clip-path: ellipse(100% 85% at 50% 60%);
-  }
-
   .section-3-cta {
     margin-top: 25px;
     gap: 15px;
@@ -487,10 +465,6 @@ body {
 
   .evershapes-logo-bubble img {
     height: 60px;
-  }
-
-  .section-3-arrow {
-    left: 50%;
   }
 }
 
@@ -567,6 +541,42 @@ button {
   outline: none;
   border: none;
   cursor: pointer;
+}
+
+/* Language Switcher */
+.lang-switcher {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.lang-btn {
+  background: transparent;
+  color: var(--black-color);
+  font-family: "Doto", sans-serif;
+  font-size: 16px;
+  font-weight: 500;
+  padding: 4px 8px;
+  border-radius: 4px;
+  opacity: 0.5;
+  transition: all 0.3s ease;
+  text-transform: uppercase;
+}
+
+.lang-btn:hover {
+  opacity: 0.8;
+}
+
+.lang-btn.active {
+  opacity: 1;
+  font-weight: 700;
+  border-bottom: 2px solid var(--black-color);
+}
+
+.lang-divider {
+  opacity: 0.3;
+  font-size: 16px;
+  user-select: none;
 }
 
 .mouse-effect {
