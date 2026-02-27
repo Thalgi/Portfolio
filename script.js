@@ -64,6 +64,7 @@ let touchStartY = 0;
 let touchEndY = 0;
 
 function handleTouchStart(event) {
+  event.preventDefault();
   touchStartY = event.touches[0].clientY;
 }
 
@@ -289,17 +290,58 @@ const positions = [
 //003a92
 //orange
 
-const material = new THREE.MeshLambertMaterial({
-  color: "#929200",
-  emissive: "blue",
-});
+// ── Marble shader: radial color-reveal from sphere center ──
+const marbleVertexShader = `
+  varying vec3 vViewNormal;
+  void main() {
+    vViewNormal = normalize(normalMatrix * normal);
+    gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+  }
+`;
+const marbleFragmentShader = `
+  uniform vec3  uColorA;
+  uniform vec3  uColorB;
+  uniform vec3  uEmissiveA;
+  uniform vec3  uEmissiveB;
+  uniform float uReveal;
+  varying vec3 vViewNormal;
+  void main() {
+    // 0 at camera-facing center of sphere, ~1 at silhouette edge
+    float centerDist = clamp(1.0 - vViewNormal.z, 0.0, 1.0);
+    // Expanding circle: new color (B) floods from center outward as uReveal -0.3 → 1.3
+    float blend      = smoothstep(uReveal - 0.25, uReveal + 0.25, centerDist);
+    vec3 baseColor   = mix(uColorB,    uColorA,    blend);
+    vec3 emissiveCol = mix(uEmissiveB, uEmissiveA, blend);
+    // Approximate scene lighting (ambient 1.0 + spot 0.52 + dir 0.2)
+    float diff1 = max(dot(vViewNormal, normalize(vec3(0.38, 0.61, 0.7))), 0.0);
+    float diff2 = max(dot(vViewNormal, normalize(vec3(0.0, -1.0, 0.0))), 0.0);
+    float lighting = 1.0 + diff1 * 0.52 + diff2 * 0.2;
+    gl_FragColor = vec4(baseColor * lighting + emissiveCol * 0.3, 1.0);
+  }
+`;
+function makeMarbleMaterial() {
+  const col = new THREE.Color('#8373DF');
+  const em  = new THREE.Color('blue');
+  return new THREE.ShaderMaterial({
+    vertexShader:   marbleVertexShader,
+    fragmentShader: marbleFragmentShader,
+    uniforms: {
+      uColorA:    { value: col.clone() },
+      uColorB:    { value: col.clone() },
+      uEmissiveA: { value: em.clone() },
+      uEmissiveB: { value: em.clone() },
+      uReveal:    { value: -0.3 },
+    },
+  });
+}
+
 const group = new THREE.Group();
 const spheres = [];
 
 positions.forEach((pos, index) => {
   const radius = radii[index];
   const geometry = new THREE.SphereGeometry(radius, 32, 64);
-  const sphere = new THREE.Mesh(geometry, material);
+  const sphere = new THREE.Mesh(geometry, makeMarbleMaterial());
   sphere.position.set(pos.x, pos.y, pos.z);
   sphere.userData = {
     originalPosition: { ...pos },
@@ -734,13 +776,13 @@ window.addEventListener("resize", () => {
 let currentLang = 'en';
 
 const marbleColors = {
-  en: { color: '#929200', emissive: 'blue' },
-  fr: { color: '#003a92', emissive: 'orange' },
+  en: { color: '#8373DF', emissive: 'blue' },
+  fr: { color: '#944A2F', emissive: 'yellow' },
 };
 
 const themeAccent = {
   en: { start: '#8373DF', end: '#9595ff', text: '#fff' },
-  fr: { start: '#FFCB72', end: '#FFBE50', text: '#1a1a2e' },
+  fr: { start: '#FFCB72', end: '#ffbe50', text: '#1a1a2e' },
 };
 
 function setLanguage(lang) {
@@ -761,22 +803,25 @@ function setLanguage(lang) {
   root.setProperty('--accent-end',   accent.end);
   root.setProperty('--accent-text',  accent.text);
 
-  const target = marbleColors[lang];
-  const targetColor = new THREE.Color(target.color);
+  const target        = marbleColors[lang];
+  const targetColor   = new THREE.Color(target.color);
   const targetEmissive = new THREE.Color(target.emissive);
-  const proxy = {
-    r: material.color.r, g: material.color.g, b: material.color.b,
-    er: material.emissive.r, eg: material.emissive.g, eb: material.emissive.b,
-  };
-  gsap.to(proxy, {
-    r: targetColor.r, g: targetColor.g, b: targetColor.b,
-    er: targetEmissive.r, eg: targetEmissive.g, eb: targetEmissive.b,
-    duration: 1.2,
-    ease: 'power2.inOut',
-    onUpdate() {
-      material.color.setRGB(proxy.r, proxy.g, proxy.b);
-      material.emissive.setRGB(proxy.er, proxy.eg, proxy.eb);
-    },
+
+  spheres.forEach((sphere, i) => {
+    const u = sphere.material.uniforms;
+    gsap.killTweensOf(u.uReveal);
+    // Commit whatever we were heading to as the new "from" color, then reveal the new target
+    u.uColorA.value.copy(u.uColorB.value);
+    u.uEmissiveA.value.copy(u.uEmissiveB.value);
+    u.uColorB.value.copy(targetColor);
+    u.uEmissiveB.value.copy(targetEmissive);
+    u.uReveal.value = -0.3;
+    gsap.to(u.uReveal, {
+      value: 1.3,
+      duration: 1.2,
+      delay: i * 0.005,
+      ease: 'power2.inOut',
+    });
   });
 }
 

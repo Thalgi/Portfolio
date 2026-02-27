@@ -16,7 +16,11 @@
 }
 html,
 body {
-  overflow-x: hidden;
+  overflow: hidden;
+  overscroll-behavior: none;
+  position: fixed;
+  width: 100%;
+  height: 100%;
 }
 
 body {
@@ -38,6 +42,7 @@ body {
 .sections-container {
   position: relative;
   height: 100vh;
+  height: 100svh;
   overflow: hidden;
 }
 
@@ -47,6 +52,7 @@ body {
   left: 0;
   width: 100%;
   height: 100vh;
+  height: 100svh;
   opacity: 0;
   transform: translateY(100%);
   transition: all 0.8s cubic-bezier(0.25, 0.8, 0.25, 1);
@@ -128,6 +134,7 @@ canvas#webgl {
 
 .section-inner {
   height: 100vh;
+  height: 100svh;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -401,7 +408,7 @@ canvas#webgl {
   }
   
   .content-block p {
-    font-size: 14px;
+    font-size: 18px;
   }
   
   .arrow-circle {
@@ -900,10 +907,10 @@ button {
     font-size: 50px;
   }
   h2 {
-    font-size: 16px;
+    font-size: 24px;
   }
   body {
-    font-size: 12px;
+    font-size: 16px;
   }
 
   .main-txt {
@@ -960,7 +967,9 @@ button {
 }
 
 .section-4-layout {
+  position: relative;
   height: 100vh;
+  height: 100svh;
   padding: 40px 50px;
   box-sizing: border-box;
 }
@@ -1014,17 +1023,18 @@ button {
 .bento-programming { grid-column: 1  / span 17; grid-row: 11 / span 6; }
 .bento-concept-art { grid-column: 19 / span 7;  grid-row: 9  / span 8; }
 
-/* "And More..." in bottom-right empty space (cols 26-32, rows 13-18) */
+/* "And More..." — grid coords (27,12) size 4×5 */
 .bento-more {
-  grid-column: 26 / 33;
-  grid-row: 13 / 19;
+  grid-column: 27 / span 4;
+  grid-row: 12 / span 5;
   display: flex;
   align-items: flex-end;
   justify-content: flex-end;
   padding: 4px;
   font-size: 26px;
   font-weight: 600;
-  color: var(--accent-text);
+  color: var(--black-color);
+  z-index: 1;
 }
 
 /* images inside cards */
@@ -1063,4 +1073,30 @@ button {
 /* concept art: fit without cropping */
 .bento-concept-art .bento-img-fill img {
   object-fit: contain;
+}
+
+/* ── Section 4 — mobile bento grid (18×32 portrait) ─── */
+@media (max-width: 768px) {
+  .section-4-layout {
+    padding: 12px 12px 16px 12px;
+  }
+
+  .bento-grid {
+    grid-template-columns: repeat(18, 1fr);
+    grid-template-rows: repeat(32, 1fr);
+    gap: 6px;
+  }
+
+  .bento-card     { padding: 10px; border-radius: 10px; }
+  .bento-label    { font-size: 17px; }
+  .bento-title h2 { font-size: 24px; }
+  .bento-more     { font-size: 18px; }
+
+  .bento-title      { grid-column: 1 / span 8;  grid-row: 1 / span 3; }
+  .bento-3d         { grid-column: 3 / span 6;  grid-row: 4  / span 6; }
+  .bento-modelism   { display: none; }
+  .bento-game-art   { grid-column: 3 / span 13; grid-row: 11 / span 7; }
+  .bento-programming{ grid-column: 3 / span 13; grid-row: 19 / span 6; }
+  .bento-concept-art{ grid-column: 10 / span 6;  grid-row: 2  / span 8; }
+  .bento-more       { grid-column: 9  / span 6; grid-row: 25 / span 2; }
 }
