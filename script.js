@@ -18,13 +18,14 @@ function showSection(index) {
   }
 
   sections[index].classList.add('active');
+  const prevSection = currentSection;
   currentSection = index;
 
-  const canvas = document.querySelector('#webgl');
-  if (index === 0) {
-    canvas.style.display = 'block';
-  } else {
-    canvas.style.display = 'none';
+  // Marble state transitions (only after loading is complete)
+  if (index === 1 && loadingComplete && sceneState === 'section1') {
+    transitionToSection2();
+  } else if (prevSection === 1 && loadingComplete && sceneState === 'section2') {
+    transitionToSection1();
   }
 
   setTimeout(() => {
@@ -282,10 +283,15 @@ const positions = [
 // ─────────────────────────────────────────────────────────
 // Scene Objects
 // ─────────────────────────────────────────────────────────
+//929200
+//blue
+//
+//003a92
+//orange
 
 const material = new THREE.MeshLambertMaterial({
   color: "#929200",
-  emissive: "blue"
+  emissive: "blue",
 });
 const group = new THREE.Group();
 const spheres = [];
@@ -310,6 +316,17 @@ positions.forEach((pos, index) => {
   sphere.receiveShadow = true;
   spheres.push(sphere);
   group.add(sphere);
+});
+
+// Assign section-2 split target positions and GSAP animation flag
+spheres.forEach((sphere, i) => {
+  const side = i < 49 ? -1 : 1;
+  sphere.userData.section2Position = {
+    x: side * (4.5 + Math.random() * 3.5),
+    y: (Math.random() - 0.5) * 6.0,
+    z: (Math.random() - 0.5) * 3.0,
+  };
+  sphere.userData.gsapAnimating = false;
 });
 
 scene.add(group);
@@ -455,6 +472,44 @@ function lerp(a, b, t) {
 }
 
 // ─────────────────────────────────────────────────────────
+// Scene State + Section 2 Transitions
+// ─────────────────────────────────────────────────────────
+
+let sceneState = 'section1'; // 'section1' | 'section2'
+
+function transitionToSection2() {
+  sceneState = 'section2';
+  spheres.forEach((sphere, i) => {
+    sphere.userData.gsapAnimating = true;
+    const s2 = sphere.userData.section2Position;
+    gsap.killTweensOf(sphere.position);
+    gsap.to(sphere.position, {
+      x: s2.x, y: s2.y, z: s2.z,
+      duration: 1.4,
+      delay: i * 0.006,
+      ease: 'power3.out',
+      onComplete: () => { sphere.userData.gsapAnimating = false; },
+    });
+  });
+}
+
+function transitionToSection1() {
+  sceneState = 'section1';
+  spheres.forEach((sphere, i) => {
+    sphere.userData.gsapAnimating = true;
+    const orig = sphere.userData.originalPosition;
+    gsap.killTweensOf(sphere.position);
+    gsap.to(sphere.position, {
+      x: orig.x, y: orig.y, z: orig.z,
+      duration: 1.4,
+      delay: i * 0.006,
+      ease: 'power3.out',
+      onComplete: () => { sphere.userData.gsapAnimating = false; },
+    });
+  });
+}
+
+// ─────────────────────────────────────────────────────────
 // Load trigger
 // ─────────────────────────────────────────────────────────
 
@@ -510,7 +565,7 @@ let xFollow = gsap.quickTo(".circle-follow", "x", {
 // ─────────────────────────────────────────────────────────
 
 function onMouseMove(event) {
-  if (!loadingComplete) return;
+  if (!loadingComplete || currentSection !== 0) return;
 
   xTo(event.clientX);
   yTo(event.clientY);
@@ -604,10 +659,10 @@ function animate() {
   spheres.forEach((sphere, i) => {
     const ud = sphere.userData;
 
-    // FIX #4c: Each sphere starts idle as soon as ITS vortex is done
-    if (!ud.vortexDone) return;
+    // Skip if vortex not done or a GSAP transition is driving this sphere
+    if (!ud.vortexDone || ud.gsapAnimating) return;
 
-    const orig = ud.originalPosition;
+    const orig = sceneState === 'section2' ? ud.section2Position : ud.originalPosition;
 
     // ── Orbital drift ──
     const angle = time * ud.orbitSpeed + ud.orbitPhase;
@@ -678,6 +733,16 @@ window.addEventListener("resize", () => {
 // Language Switcher
 let currentLang = 'en';
 
+const marbleColors = {
+  en: { color: '#929200', emissive: 'blue' },
+  fr: { color: '#003a92', emissive: 'orange' },
+};
+
+const themeAccent = {
+  en: { start: '#8373DF', end: '#9595ff', text: '#fff' },
+  fr: { start: '#FFCB72', end: '#FFBE50', text: '#1a1a2e' },
+};
+
 function setLanguage(lang) {
   currentLang = lang;
   document.documentElement.lang = lang;
@@ -688,6 +753,30 @@ function setLanguage(lang) {
 
   document.querySelectorAll('.lang-btn').forEach(btn => {
     btn.classList.toggle('active', btn.getAttribute('data-lang') === lang);
+  });
+
+  const accent = themeAccent[lang];
+  const root = document.documentElement.style;
+  root.setProperty('--accent-start', accent.start);
+  root.setProperty('--accent-end',   accent.end);
+  root.setProperty('--accent-text',  accent.text);
+
+  const target = marbleColors[lang];
+  const targetColor = new THREE.Color(target.color);
+  const targetEmissive = new THREE.Color(target.emissive);
+  const proxy = {
+    r: material.color.r, g: material.color.g, b: material.color.b,
+    er: material.emissive.r, eg: material.emissive.g, eb: material.emissive.b,
+  };
+  gsap.to(proxy, {
+    r: targetColor.r, g: targetColor.g, b: targetColor.b,
+    er: targetEmissive.r, eg: targetEmissive.g, eb: targetEmissive.b,
+    duration: 1.2,
+    ease: 'power2.inOut',
+    onUpdate() {
+      material.color.setRGB(proxy.r, proxy.g, proxy.b);
+      material.emissive.setRGB(proxy.er, proxy.eg, proxy.eb);
+    },
   });
 }
 

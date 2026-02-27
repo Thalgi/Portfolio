@@ -31,9 +31,9 @@
         <ul>
           <li><a href="#" data-section="1" data-en="Who Am I" data-fr="Qui suis-je">Who Am I</a></li>
           <li><a href="#" data-section="2" data-en="What I Do" data-fr="Ce que je fais">What I Do</a></li>
-          <li><a href="#" data-section="3" data-en="Previous Projects" data-fr="Projets précédents">Previous Projects</a></li>
-          <li><a href="#" data-section="4" data-en="Future Projects" data-fr="Projets futurs">Future Projects</a></li>
-          <li><a href="#" data-section="5" data-en="Contact Me" data-fr="Me contacter">Contact Me</a></li>
+          <li><a href="#" data-section="4" data-en="My Projects" data-fr="Mes projets">My Projects</a></li>
+          <li><a href="#" data-section="5" data-en="Soon" data-fr="A Suivre">Soon</a></li>
+          <li><a href="#" data-section="6" data-en="Contact Me" data-fr="Me contacter">Contact Me</a></li>
         </ul>
       </nav>
     </div>
@@ -47,8 +47,8 @@
       <div class="banner hide-text">
         <div class="banner-inner">
           <div class="top-desc">
-            <h5 data-en="A lot of Marbles" data-fr="Beaucoup de billes">A lot of Marbles</h5>
-            <h6 data-en="Play with them if you wish" data-fr="Jouez avec si vous le souhaitez">Play with them if you wish</h6>
+            <h5 data-en="A lot of Marbles" data-fr="Un amas de billes">A lot of Marbles</h5>
+            <h6 data-en="Movable on PC version" data-fr="Interactible sur la version PC">Movable on PC version</h6>
             <span></span>
           </div>
           <div class="bottom-desc">
@@ -80,7 +80,6 @@
         </div>
       </div>
       <span class="rotated-text hide-text" data-en="Drag cursor to move them" data-fr="Glissez le curseur pour les déplacer">Drag cursor to move them</span>
-      <canvas class="webgl" id="webgl"></canvas>
     </section>
 
     <!-- Section 2: About -->
@@ -97,8 +96,8 @@
             <div class="content-section">
               <h2 data-en="Who Am I" data-fr="Qui suis-je">Who Am I</h2>
               <div class="content-block blue-block">
-                <p data-en="I'm a computer engineer from Bordeaux, which graduated of the Institute of Technology from the same city" data-fr="Je suis ingénieur informatique bordelais, diplômé de l'Institut de Technologie de la même ville">I'm a computer engineer from Bordeaux, which graduated of the Institute of Technology from the same city</p>
-                <p data-en="My hobbies are climbing, swimming, backpacking and .. well easy to guess programming ✨" data-fr="Mes hobbies sont l'escalade, la natation, la randonnée et .. facile à deviner la programmation ✨">My hobbies are climbing, swimming, backpacking and .. well easy to guess programming &#10024;</p>
+                <p data-en="I'm a computer engineer from Bordeaux, which graduated of the Institute of Technology from the same city" data-fr="Je suis ingénieur en système d'information bordelais, diplômé d'un DUT et d'un Master">I'm a computer engineer from Bordeaux, which graduated of the Institute of Technology from the same city</p>
+                <p data-en="My hobbies are climbing, swimming, backpacking and .. well easy to guess programming ✨" data-fr="Mes passions sont l'escalade, la natation, la randonnée et .. facile à deviner la programmation ✨">My hobbies are climbing, swimming, backpacking and .. well easy to guess programming &#10024;</p>
               </div>
             </div>
           </div>
@@ -137,7 +136,7 @@
           </div>
           <div class="section-3-cta">
             <span class="see-more-text" data-en="See more here" data-fr="En savoir plus ici">See more here</span>
-            <a href="#" class="evershapes-logo-link" id="evershapes-link">
+            <a href="https://evershapes.net" class="evershapes-logo-link" id="evershapes-link">
               <div class="evershapes-logo-bubble">
                 <img src="images/evershapes_logo.png" alt="Evershapes Logo">
               </div>
@@ -157,7 +156,64 @@
       </div>
     </section>
 
+    <!-- Section 4: I do too (desktop only, no nav link) -->
+    <section class="section section-4">
+      <div class="section-4-layout">
+        <div class="bento-grid">
+          <div class="bento-title">
+            <h2 data-en="I do too" data-fr="Je fais aussi">I do too</h2>
+          </div>
+
+          <div class="bento-card bento-3d">
+            <span class="bento-label" data-en="3D printing" data-fr="Impression 3D">3D printing</span>
+            <div class="bento-img-fill">
+              <img src="images/3d_print.jpeg" alt="3D printing">
+            </div>
+          </div>
+
+          <div class="bento-card bento-modelism">
+            <span class="bento-label" data-en="Modelism Project" data-fr="Projet de modélisme">Modelism Project</span>
+            <div class="bento-img-fill">
+              <img src="images/modelism.jpeg" alt="Modelism">
+            </div>
+          </div>
+
+          <div class="bento-card bento-game-art">
+            <span class="bento-label" data-en="Game Art &amp; Model" data-fr="Art &amp; modèles 3D">Game Art &amp; Model</span>
+            <div class="bento-game-images">
+              <img src="images/bike.gif" alt="Bike concept">
+              <img src="images/both_alien.png" alt="Alien characters">
+            </div>
+          </div>
+
+          <div class="bento-card bento-programming">
+            <span class="bento-label" data-en="Programming" data-fr="Programmation">Programming</span>
+          </div>
+
+          <div class="bento-card bento-concept-art">
+            <span class="bento-label" data-en="Concept Art" data-fr="Concept Art">Concept Art</span>
+            <div class="bento-img-fill">
+              <img src="images/concept_art.jpeg" alt="Concept art">
+            </div>
+          </div>
+
+          <div class="bento-more">
+            <span data-en="And More ..." data-fr="Et bien plus ...">And More ...</span>
+          </div>
+
+        </div>
+      </div>
+      <div class="scroll-down-btn">
+        <div class="arrow-circle">
+          <i class="fa-solid fa-chevron-down"></i>
+        </div>
+      </div>
+    </section>
+
   </div>
+
+  <!-- Three.js canvas — fixed at body level so it persists across sections -->
+  <canvas class="webgl" id="webgl"></canvas>
 
   <!-- Local JavaScript -->
   <script src="script.js"></script>
