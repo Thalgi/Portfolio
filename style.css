@@ -262,7 +262,7 @@ canvas#webgl {
 
 /* Section 3 - What I Do Styles */
 .section-3 {
-  background: #fbfaff;
+  background: transparent;
 }
 
 .section-3-layout {
@@ -347,7 +347,6 @@ canvas#webgl {
   position: absolute;
   top: 0;
   right: 0;
-  width: 45%;
   height: 100%;
   z-index: 1;
   overflow: hidden;
@@ -446,11 +445,17 @@ canvas#webgl {
   }
 
   .section-3-image {
-    width: 50%;
+    top: 10%;
+    bottom: 10%;
+    height: auto;
+  }
+
+  .portfolio-image-wrapper {
+    clip-path: ellipse(78% 88% at 60% 50%);
   }
 
   .section-3.active .section-3-image {
-    opacity: 0.3;
+    opacity: 1;
   }
 
   .section-3-cta {
@@ -643,6 +648,19 @@ button {
   transition: opacity 0.5s ease-in-out;
 }
 
+header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 100;
+  background: rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(24px) saturate(180%);
+  -webkit-backdrop-filter: blur(24px) saturate(180%);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.18);
+  box-shadow: 0 2px 24px rgba(0, 0, 0, 0.06);
+}
+
 .header-inner {
   display: flex;
   display: -webkit-flex;
@@ -698,7 +716,8 @@ button {
 
 .banner-inner {
   padding: 100px 20px 30px;
-  min-height: calc(100dvh - 90px);
+  min-height: 100dvh;
+  min-height: 100svh;
   gap: 10px;
   display: flex;
   display: -webkit-flex;
@@ -811,7 +830,8 @@ button {
   }
 
   .banner-inner {
-    min-height: calc(100dvh - 85px);
+    min-height: 100dvh;
+    min-height: 100svh;
   }
   .banner-inner .bottom-desc .right-desc h1 {
     padding-right: 40px;
@@ -852,7 +872,8 @@ button {
   }
 
   .banner-inner {
-    min-height: calc(100dvh - 76px);
+    min-height: 100dvh;
+    min-height: 100svh;
     padding-top: 80px;
   }
   .banner-inner .bottom-desc .right-desc h1 {
@@ -888,7 +909,8 @@ button {
   }
 
   .banner-inner {
-    min-height: calc(100dvh - 70px);
+    min-height: 100dvh;
+    min-height: 100svh;
     padding-top: 60px;
   }
   .banner-inner .bottom-desc .right-desc h1 {
@@ -932,7 +954,8 @@ button {
   }
 
   .banner-inner {
-    min-height: calc(100dvh - 60px);
+    min-height: 100dvh;
+    min-height: 100svh;
     padding-top: 40px;
   }
 
@@ -963,7 +986,7 @@ button {
 
 /* ── Section 4 — I do too (desktop only) ────────────── */
 .section-4 {
-  background: #fbfaff;
+  background: transparent;
 }
 
 .section-4-layout {

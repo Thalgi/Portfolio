@@ -18,14 +18,19 @@ function showSection(index) {
   }
 
   sections[index].classList.add('active');
-  const prevSection = currentSection;
   currentSection = index;
 
   // Marble state transitions (only after loading is complete)
-  if (index === 1 && loadingComplete && sceneState === 'section1') {
-    transitionToSection2();
-  } else if (prevSection === 1 && loadingComplete && sceneState === 'section2') {
-    transitionToSection1();
+  if (loadingComplete) {
+    if (index === 0 && sceneState !== 'section1') {
+      transitionToSection1();
+    } else if (index === 1 && (sceneState === 'section1' || sceneState === 'section3')) {
+      transitionToSection2();
+    } else if (index === 2 && (sceneState === 'section2' || sceneState === 'section1')) {
+      transitionToSection3();
+    } else if (index === 3 && sceneState !== 'section1') {
+      transitionToSection1();
+    }
   }
 
   setTimeout(() => {
@@ -64,6 +69,7 @@ let touchStartY = 0;
 let touchEndY = 0;
 
 function handleTouchStart(event) {
+  if (event.target.closest('button, a, input, select, label')) return;
   event.preventDefault();
   touchStartY = event.touches[0].clientY;
 }
@@ -371,6 +377,23 @@ spheres.forEach((sphere, i) => {
   sphere.userData.gsapAnimating = false;
 });
 
+// Assign section-3 crescent positions (bottom-left arc)
+// Arc centered at (-1, -0.5), sweeping 110°→300° through left & bottom-left
+const crescentCX = -1.0, crescentCY = -0.5;
+const crescentAngleMin = (110 * Math.PI) / 180;
+const crescentAngleMax = (300 * Math.PI) / 180;
+spheres.forEach((sphere, i) => {
+  const t = i / spheres.length;
+  const angle = crescentAngleMin
+    + (crescentAngleMax - crescentAngleMin) * (t + (Math.random() - 0.5) * 0.12);
+  const r = 2.6 + Math.random() * 2.0;
+  sphere.userData.section3Position = {
+    x: crescentCX + r * Math.cos(angle) + (Math.random() - 0.5) * 0.5,
+    y: crescentCY + r * Math.sin(angle) + (Math.random() - 0.5) * 0.5,
+    z: (Math.random() - 0.5) * 2.5,
+  };
+});
+
 scene.add(group);
 
 // Lighting
@@ -517,7 +540,7 @@ function lerp(a, b, t) {
 // Scene State + Section 2 Transitions
 // ─────────────────────────────────────────────────────────
 
-let sceneState = 'section1'; // 'section1' | 'section2'
+let sceneState = 'section1'; // 'section1' | 'section2' | 'section3'
 
 function transitionToSection2() {
   sceneState = 'section2';
@@ -545,6 +568,29 @@ function transitionToSection1() {
       x: orig.x, y: orig.y, z: orig.z,
       duration: 1.4,
       delay: i * 0.006,
+      ease: 'power3.out',
+      onComplete: () => { sphere.userData.gsapAnimating = false; },
+    });
+  });
+}
+
+function transitionToSection3() {
+  sceneState = 'section3';
+  // Sort by target angle around the crescent so marbles flow in sequentially
+  const sorted = [...spheres].sort((a, b) => {
+    const pa = a.userData.section3Position;
+    const pb = b.userData.section3Position;
+    return Math.atan2(pa.y - crescentCY, pa.x - crescentCX)
+         - Math.atan2(pb.y - crescentCY, pb.x - crescentCX);
+  });
+  sorted.forEach((sphere, i) => {
+    sphere.userData.gsapAnimating = true;
+    const s3 = sphere.userData.section3Position;
+    gsap.killTweensOf(sphere.position);
+    gsap.to(sphere.position, {
+      x: s3.x, y: s3.y, z: s3.z,
+      duration: 1.6,
+      delay: i * 0.009,
       ease: 'power3.out',
       onComplete: () => { sphere.userData.gsapAnimating = false; },
     });
@@ -648,11 +694,11 @@ function handleCollisions() {
       const distance = sphereA.position.distanceTo(sphereB.position);
       const minDistance = (radiusA + radiusB) * 1.2;
 
-      if (distance < minDistance) {
+      if (distance < minDistance && distance > 0) {
         tempVector.subVectors(sphereB.position, sphereA.position);
         tempVector.normalize();
 
-        const pushStrength = (minDistance - distance) * 0.4;
+        const pushStrength = (minDistance - distance) * 0.1;
         sphereA.position.sub(tempVector.multiplyScalar(pushStrength));
         sphereB.position.add(tempVector.multiplyScalar(pushStrength));
       }
@@ -704,7 +750,9 @@ function animate() {
     // Skip if vortex not done or a GSAP transition is driving this sphere
     if (!ud.vortexDone || ud.gsapAnimating) return;
 
-    const orig = sceneState === 'section2' ? ud.section2Position : ud.originalPosition;
+    const orig = sceneState === 'section2' ? ud.section2Position
+               : sceneState === 'section3' ? ud.section3Position
+               : ud.originalPosition;
 
     // ── Orbital drift ──
     const angle = time * ud.orbitSpeed + ud.orbitPhase;
