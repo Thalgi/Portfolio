@@ -8,7 +8,7 @@
   --accent-end:   #9595ff;
   --accent-text:  #fff;
   /* Fixed navbar height — used to offset section content */
-  --navbar-h: 62px;
+  --navbar-h: 80px;
 }
 
 * {
@@ -92,7 +92,7 @@ canvas#webgl {
   align-items: center;
   cursor: pointer;
   position: absolute;
-  bottom: 20px;
+  bottom: -25px;
   left: 50%;
   transform: translateX(-50%);
   z-index: 5;
@@ -962,7 +962,7 @@ header {
   .banner-inner {
     min-height: 100dvh;
     min-height: 100svh;
-    padding-top: 40px;
+    padding-top: var(--navbar-h);
   }
 
   .banner-inner .bottom-desc .left-desc h1 {
@@ -1107,7 +1107,7 @@ header {
 /* ── Section 4 — mobile bento grid (18×32 portrait) ─── */
 @media (max-width: 768px) {
   .section-4-layout {
-    padding: 65px 12px 16px 12px;
+    padding: 80px 12px 16px 12px;
   }
 
   .bento-grid {
